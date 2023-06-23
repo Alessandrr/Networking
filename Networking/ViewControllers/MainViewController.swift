@@ -14,6 +14,8 @@ enum UserAction: String, CaseIterable {
     case aboutSwiftBook = "About SwiftBook"
     case aboutSwiftBook2 = "About SwiftBook 2"
     case showCourses = "Show Courses"
+    case postRequestWithDict = "POST RQST with Dict"
+    case postRequestWithModel = "POST RQST with Model"
 }
 
 enum Link: String {
@@ -22,6 +24,8 @@ enum Link: String {
     case coursesURL = "https://swiftbook.ru/wp-content/uploads/api/api_courses"
     case websiteDescription = "https://swiftbook.ru/wp-content/uploads/api/api_website_description"
     case websiteMissingInfo = "https://swiftbook.ru/wp-content/uploads/api/api_missing_or_wrong_fields"
+    case postRequest = "https://jsonplaceholder.typicode.com/posts"
+    case courseImageURL = "https://swiftbook.ru/wp-content/uploads/sites/2/2018/08/notifications-course-with-background.png"
 }
 
 enum Alert {
@@ -77,13 +81,20 @@ class MainViewController: UICollectionViewController {
         case .aboutSwiftBook: fetchInfoAboutUs()
         case .aboutSwiftBook2: fetchInfoAboutUsWithEmptyFields()
         case .showCourses: performSegue(withIdentifier: "showCourses", sender: nil)
+        case .postRequestWithDict:
+            break
+        case .postRequestWithModel:
+            break
         }
     }
     
     //MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        if segue.identifier == "showCourses" {
+            guard let coursesVC = segue.destination as? CoursesViewController else { return }
+            coursesVC.fetchCourses()
+        }
     }
     
     // MARK: - Private methods
@@ -109,29 +120,16 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 
 private extension MainViewController {
     func fetchCourse() {
-        guard let url = URL(string: Link.courseURL.rawValue) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            do {
-                let course = try decoder.decode(Course.self, from: data)
+        NetworkManager.shared.fetchCourse(from: Link.courseURL.rawValue) { [weak self] result in
+            switch result {
+            case .success(let course):
                 print(course)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
-            } catch {
+                self?.showAlert(.success)
+            case .failure(let error):
                 print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
+                self?.showAlert(.failed)
             }
-            
-        }.resume()
+        }
     }
     
     func fetchCourses() {

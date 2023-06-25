@@ -81,10 +81,8 @@ class MainViewController: UICollectionViewController {
         case .aboutSwiftBook: fetchInfoAboutUs()
         case .aboutSwiftBook2: fetchInfoAboutUsWithEmptyFields()
         case .showCourses: performSegue(withIdentifier: "showCourses", sender: nil)
-        case .postRequestWithDict:
-            break
-        case .postRequestWithModel:
-            break
+        case .postRequestWithDict: postRequestWithDict()
+        case .postRequestWithModel: postRequestWithModel()
         }
     }
     
@@ -103,7 +101,6 @@ class MainViewController: UICollectionViewController {
         let okAction = UIAlertAction(title: "OK", style: .default)
         alert.addAction(okAction)
         present(alert, animated: true)
-        
     }
 }
 
@@ -120,7 +117,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 
 private extension MainViewController {
     func fetchCourse() {
-        NetworkManager.shared.fetchCourse(from: Link.courseURL.rawValue) { [weak self] result in
+        NetworkManager.shared.fetch(Course.self, from: Link.courseURL.rawValue) { [weak self] result in
             switch result {
             case .success(let course):
                 print(course)
@@ -133,80 +130,81 @@ private extension MainViewController {
     }
     
     func fetchCourses() {
-        guard let url = URL(string: Link.coursesURL.rawValue) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            do {
-                let courses = try decoder.decode([Course].self, from: data)
-                print(courses)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
-            } catch {
+        NetworkManager.shared.fetch([Course].self, from: Link.coursesURL.rawValue) { [weak self] result in
+            switch result {
+            case .success(let info):
+                print(info)
+                self?.showAlert(.success)
+            case .failure(let error):
                 print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
+                self?.showAlert(.failed)
             }
-            
-        }.resume()
+        }
     }
     
     func fetchInfoAboutUs() {
-        guard let url = URL(string: Link.websiteDescription.rawValue) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            do {
-                let info = try decoder.decode(SwiftbookInfo.self, from: data)
+        NetworkManager.shared.fetch(SwiftbookInfo.self, from: Link.websiteDescription.rawValue) { [weak self] result in
+            switch result {
+            case .success(let info):
                 print(info)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
-            } catch {
+                self?.showAlert(.success)
+            case .failure(let error):
                 print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.showAlert(.failed)
-                }
+                self?.showAlert(.failed)
             }
-            
-        }.resume()
+        }
     }
     
     func fetchInfoAboutUsWithEmptyFields() {
-        guard let url = URL(string: Link.websiteMissingInfo.rawValue) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            do {
-                let info = try decoder.decode(SwiftbookInfo.self, from: data)
+        NetworkManager.shared.fetch(SwiftbookInfo.self, from: Link.websiteMissingInfo.rawValue) { [weak self] result in
+            switch result {
+            case .success(let info):
                 print(info)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
-            } catch {
+                self?.showAlert(.success)
+            case .failure(let error):
                 print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.showAlert(.success)
-                }
+                self?.showAlert(.failed)
             }
-            
-        }.resume()
+        }
+    }
+    
+    func postRequestWithDict() {
+        let course = [
+            "name": "Network",
+            "imageURL": "imageurl",
+            "numberOfLessons": "10",
+            "numberOfTests": "80"
+        ]
+        
+        NetworkManager.shared.postRequest(with: course, to: Link.postRequest.rawValue) { [weak self] result in
+            switch result {
+            case .success(let json):
+                print(json)
+                self?.showAlert(.success)
+            case .failure(let error):
+                print(error.localizedDescription)
+                self?.showAlert(.failed)
+            }
+        }
+    }
+    
+    func postRequestWithModel() {
+        let course = Course(
+            name: "Networking",
+            imageUrl: Link.imageURL.rawValue,
+            numberOfLessons: 10,
+            numberOfTests: 5
+        )
+        
+        NetworkManager.shared.postRequest(with: course, to: Link.postRequest.rawValue) { [weak self] result in
+            switch result {
+            case .success(let course):
+                print(course)
+                self?.showAlert(.success)
+            case .failure(let error):
+                print(error.localizedDescription)
+                self?.showAlert(.failed)
+            }
+        }
     }
 }

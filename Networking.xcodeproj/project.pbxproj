@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F716FE72A45D75D00362DB5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F716FE62A45D75D00362DB5 /* NetworkManager.swift */; };
+		1F716FF32A4C167400362DB5 /* NewCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F716FF22A4C167400362DB5 /* NewCourseViewController.swift */; };
 		1F93F34C2A40C8A400C330BD /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93F34B2A40C8A400C330BD /* Course.swift */; };
 		1FC438A92A4096DD00B645F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC438A82A4096DD00B645F0 /* AppDelegate.swift */; };
 		1FC438AB2A4096DD00B645F0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC438AA2A4096DD00B645F0 /* SceneDelegate.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		1F716FE62A45D75D00362DB5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		1F716FF22A4C167400362DB5 /* NewCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCourseViewController.swift; sourceTree = "<group>"; };
 		1F93F34B2A40C8A400C330BD /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		1FC438A52A4096DD00B645F0 /* Networking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Networking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC438A82A4096DD00B645F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				1FC438C02A409DB200B645F0 /* CoursesViewController.swift */,
 				1FC438AC2A4096DD00B645F0 /* MainViewController.swift */,
 				1FC438BC2A409C4400B645F0 /* ImageViewController.swift */,
+				1F716FF22A4C167400362DB5 /* NewCourseViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				1FC438BD2A409C4400B645F0 /* ImageViewController.swift in Sources */,
 				1FC438AB2A4096DD00B645F0 /* SceneDelegate.swift in Sources */,
 				1FC438BF2A409CA700B645F0 /* CourseCell.swift in Sources */,
+				1F716FF32A4C167400362DB5 /* NewCourseViewController.swift in Sources */,
 				1FC438C12A409DB200B645F0 /* CoursesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

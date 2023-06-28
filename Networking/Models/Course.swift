@@ -6,10 +6,10 @@
 //
 
 struct Course: Codable {
-    let name: String?
-    let imageUrl: String?
-    let numberOfLessons: Int?
-    let numberOfTests: Int?
+    let name: String
+    let imageUrl: String
+    let numberOfLessons: Int
+    let numberOfTests: Int
 }
 
 

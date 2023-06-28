@@ -7,12 +7,17 @@
 
 import UIKit
 
+protocol NewCourseViewControllerDelegate {
+    func sendPostRequest(with data: Course)
+}
+
 class CoursesViewController: UITableViewController {
     private var courses: [Course] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 100
+        fetchCourses()
     }
 
     // MARK: - Table view data source
@@ -28,31 +33,22 @@ class CoursesViewController: UITableViewController {
         
         return cell
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let navigationVC = segue.destination as? UINavigationController else { return }
+        guard let newCourseVC = navigationVC.topViewController as? NewCourseViewController else { return }
+        newCourseVC.delegate = self
+    }
+    
+    private func fetchCourses() {
+        
+    }
 
 }
 
-// MARK: - Networking
-extension CoursesViewController {
-    func fetchCourses() {
-        guard let url = URL(string: Link.coursesURL.rawValue) else { return }
+
+extension CoursesViewController: NewCourseViewControllerDelegate {
+    func sendPostRequest(with data: Course) {
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                self?.courses = try decoder.decode([Course].self, from: data)
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            } catch let error {
-                print(error.localizedDescription)
-            }
-            
-        }.resume()
     }
 }

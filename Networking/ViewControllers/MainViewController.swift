@@ -77,7 +77,7 @@ class MainViewController: UICollectionViewController {
         switch userAction {
         case .showImage: performSegue(withIdentifier: "showImage", sender: nil)
         case .fetchCourse: fetchCourse()
-        case .fetchCourses: fetchCourses()
+        case .fetchCourses: break
         case .aboutSwiftBook: fetchInfoAboutUs()
         case .aboutSwiftBook2: fetchInfoAboutUsWithEmptyFields()
         case .showCourses: performSegue(withIdentifier: "showCourses", sender: nil)

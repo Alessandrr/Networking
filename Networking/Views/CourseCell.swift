@@ -16,8 +16,8 @@ class CourseCell: UITableViewCell {
     
     func configure(with course: Course) {
         courseNameLabel.text = course.name
-        numberOfLessons.text = "Number of lessons: \(course.numberOfLessons ?? 0)"
-        numberOfTests.text = "Number of tests: \(course.numberOfTests ?? 0)"
+        numberOfLessons.text = "Number of lessons: \(course.numberOfLessons)"
+        numberOfTests.text = "Number of tests: \(course.numberOfTests)"
         
         NetworkManager.shared.fetchImage(from: course.imageUrl) { [weak self] result in
             switch result {

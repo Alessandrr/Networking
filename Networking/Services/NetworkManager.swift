@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 enum NetworkError: Error {
     case invalidURL
@@ -17,6 +18,46 @@ class NetworkManager {
     static let shared = NetworkManager()
     
     private init() {}
+    
+    func fetchCoursesFromUrl(from url: String, completion: @escaping (Result<[Course], AFError>) -> Void) {
+        AF.request(Link.coursesURL.rawValue)
+            .validate()
+            .responseJSON { dataResponse in
+                switch dataResponse.result {
+                case .success(let value):
+                    completion(.success(Course.getCourses(from: value)))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
+    func fetchData(from url: String, completion: @escaping (Result<Data, AFError>) -> Void) {
+        AF.request(url)
+            .validate()
+            .responseData { dataResponse in
+                switch dataResponse.result {
+                case .success(let imageData):
+                    completion(.success(imageData))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
+    func sendPostRequest(to url: String, with data: Course, completion: @escaping(Result<Course, AFError>) -> Void) {
+        AF.request(url, method: .post, parameters: data)
+            .validate()
+            .responseDecodable(of: CourseJP.self) { dataResponse in
+                switch dataResponse.result {
+                case .success(let courseJP):
+                    let course = Course(courseJp: courseJP)
+                    completion(.success(course))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
     
     func fetchImage(from url: String?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let url = URL(string: url ?? "") else {

@@ -9,6 +9,10 @@ import UIKit
 
 class NewCourseViewController: UIViewController {
 
+    @IBOutlet var courseTitleTF: UITextField!
+    @IBOutlet var numberOfLessonsTF: UITextField!
+    @IBOutlet var numberOfTestsTF: UITextField!
+    
     var delegate: NewCourseViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -16,16 +20,21 @@ class NewCourseViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
+        let course = Course(
+            name: courseTitleTF.text ?? "",
+            imageUrl: Link.courseImageURL.rawValue,
+            numberOfLessons: Int(numberOfLessonsTF.text ?? "") ?? 0,
+            numberOfTests: Int(numberOfTestsTF.text ?? "") ?? 0
+        )
+        
+        delegate?.sendPostRequest(with: course)
+        dismiss(animated: true)
     }
-    */
-
+    
+    @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
+        dismiss(animated: true)
+    }
+    
 }

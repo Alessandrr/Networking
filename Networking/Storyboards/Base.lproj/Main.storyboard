@@ -162,9 +162,22 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="kXB-l4-fhc">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="BGL-wp-BZW"/>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="cCl-Zh-BXE"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="BGL-wp-BZW">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="Cha-57-VaS" id="dPa-Ug-Sf1"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="cCl-Zh-BXE">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="Cha-57-VaS" id="EE6-6r-irq"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="courseTitleTF" destination="hcO-ni-SWf" id="Yrk-fr-vtB"/>
+                        <outlet property="numberOfLessonsTF" destination="GcJ-ue-TxZ" id="IXB-V5-oro"/>
+                        <outlet property="numberOfTestsTF" destination="NmP-cO-vqk" id="U5k-99-e7T"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vIA-5M-FMI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

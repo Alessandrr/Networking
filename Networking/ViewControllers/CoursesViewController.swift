@@ -13,7 +13,7 @@ protocol NewCourseViewControllerDelegate {
 
 class CoursesViewController: UITableViewController {
     private var courses: [Course] = []
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 100
@@ -41,14 +41,32 @@ class CoursesViewController: UITableViewController {
     }
     
     private func fetchCourses() {
-        
+        NetworkManager.shared.fetchCoursesFromUrl(from: Link.courseURL.rawValue) { [weak self] result in
+            switch result {
+            case .success(let courses):
+                self?.courses = courses
+                self?.tableView.reloadData()
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
-
 }
 
 
 extension CoursesViewController: NewCourseViewControllerDelegate {
     func sendPostRequest(with data: Course) {
-        
+        NetworkManager.shared.sendPostRequest(to: Link.postRequest.rawValue, with: data) { [weak self] result in
+            switch result {
+            case .success(let course):
+                self?.courses.append(course)
+                self?.tableView.insertRows(
+                    at: [IndexPath(row: (self?.courses.count ?? 0) - 1, section: 0)],
+                    with: .automatic
+                )
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }

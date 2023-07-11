@@ -13,6 +13,7 @@ class CoursesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 100
+        showCourses()
     }
 
     // MARK: - Table view data source
@@ -54,5 +55,16 @@ extension CoursesViewController {
             }
             
         }.resume()
+    }
+    
+    func showCourses() {
+        Task {
+            do {
+                courses = try await NetworkManager.shared.fetchCourses()
+                tableView.reloadData()
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
     }
 }

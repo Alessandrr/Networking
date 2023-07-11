@@ -35,6 +35,26 @@ class NetworkManager {
         }
     }
     
+    func fetchCourses() async throws -> [Course] {
+        guard let url = URL(string: Link.coursesURL.rawValue) else {
+            throw NetworkError.invalidURL
+        }
+        
+
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let courses: [Course]
+        do {
+            courses = try decoder.decode([Course].self, from: data)
+        } catch let error {
+            print(error.localizedDescription)
+            throw NetworkError.decodingError
+        }
+        
+        return courses
+    }
+    
     func fetch<T: Decodable>(_ type: T.Type, from url: String?, completion: @escaping (Result<T, NetworkError>) -> Void) {
         guard let url = URL(string: url ?? "") else {
             completion(.failure(.invalidURL))
